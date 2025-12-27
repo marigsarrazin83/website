@@ -1090,8 +1090,8 @@
 
 .testimonials-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: var(--spacing-md);
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
   position: relative;
   z-index: 1;
   padding: 0 var(--spacing-xl);
@@ -1099,8 +1099,8 @@
 
 .testimonial-card {
   background-color: var(--color-bg-card);
-  padding: var(--spacing-xl);
-  border-radius: var(--border-radius-xl);
+  padding: 1.5rem;
+  border-radius: 1.25rem;
   box-shadow: var(--shadow-md);
   border: 1px solid var(--color-border);
   transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -1112,26 +1112,26 @@
 }
 
 .testimonial-card:hover {
-  transform: translateY(-8px);
+  transform: translateY(-6px);
   box-shadow: var(--shadow-lg), var(--glow-primary);
   border-color: var(--color-primary);
 }
 
 .testimonial-quote-mark {
-  font-size: 3rem;
+  font-size: 2.25rem;
   font-weight: 700;
   color: var(--color-primary);
   line-height: 1;
-  margin-bottom: var(--spacing-md);
+  margin-bottom: 0.75rem;
   font-family: Georgia, serif;
   text-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
 }
 
 .testimonial-text {
-  font-size: 1.125rem;
-  line-height: 1.8;
+  font-size: 1rem;
+  line-height: 1.75;
   color: var(--color-text);
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: 1.25rem;
 }
 
 .testimonial-author {
@@ -1148,7 +1148,7 @@
   font-weight: 600;
   color: var(--color-text);
   margin-bottom: 4px;
-  font-size: 1rem;
+  font-size: 0.95rem;
 }
 
 .author-role {
