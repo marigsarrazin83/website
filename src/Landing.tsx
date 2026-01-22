@@ -1,6 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import './Landing.css'
 import marigAvatar from './assets/marig.jpg'
+import weblameLogo from './assets/weblame-logo.png'
+import weblameAirtable from './assets/weblame-airtable.png'
+import weblameNotion from './assets/weblame-notion.png'
+import weblameWhimsical from './assets/weblame-whimsical.png'
 
 // Contenu des expertises
 const expertiseContent: { [key: string]: { title: string; intro: string; items: string[]; footer: string } } = {
@@ -320,7 +324,7 @@ function SkillIcon({ skillName }: { skillName: string }) {
   )
 }
 
-function ProjectCard({ project, index, onClick }: { project: { name: string; category: string[]; description: string; tools: string[] }, index: number, onClick?: () => void }) {
+function ProjectCard({ project, index, onClick }: { project: Project, index: number, onClick?: () => void }) {
   const cardRef = useScrollAnimation({ threshold: 0.1, rootMargin: '0px 0px -50px 0px' })
   
   // Map tools to their icons
@@ -454,7 +458,14 @@ function ProjectCard({ project, index, onClick }: { project: { name: string; cat
           <path d="M7 17L17 7M17 7H7M17 7V17" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
       </span>
-      <h3 className="project-title">{project.name}</h3>
+      <div className="project-header">
+        {project.logo && (
+          <div className="project-logo-wrapper">
+            <img src={project.logo} alt="Client logo" className="project-logo" />
+          </div>
+        )}
+        <h3 className="project-title">{project.name}</h3>
+      </div>
       {project.description && (
         <p className="project-description">{project.description}</p>
       )}
@@ -530,6 +541,8 @@ type Project = {
   category: string[]; // Array pour supporter plusieurs catégories
   description: string;
   tools: string[];
+  logo?: string;
+  screenshots?: { src: string; label: string }[];
   details: {
     context: string;
     reporting: string;
@@ -586,6 +599,21 @@ function ProjectModal({ project, onClose }: { project: Project | null; onClose: 
               ))}
             </div>
           </div>
+          {project.screenshots && project.screenshots.length > 0 && (
+            <div className="project-modal-section project-modal-screens">
+              <h3 className="project-modal-section-title">Screens from the project</h3>
+              <div className="project-modal-screens-grid">
+                {project.screenshots.map((shot, index) => (
+                  <div key={index} className="project-modal-screen-card">
+                    <div className="project-modal-screen-image-wrapper">
+                      <img src={shot.src} alt={shot.label} className="project-modal-screen-image" />
+                    </div>
+                    <div className="project-modal-screen-label">{shot.label}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -602,6 +630,8 @@ function Landing() {
   const [activeSkillCategory, setActiveSkillCategory] = useState<'Expertises' | 'Tools' | 'Languages'>('Expertises')
   const [selectedExpertise, setSelectedExpertise] = useState<string | null>(null)
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
+  const [showBeyondProjects, setShowBeyondProjects] = useState(false)
+  const [showMyServices, setShowMyServices] = useState(false)
   
   const scrollCarousel = (direction: 'left' | 'right') => {
     if (carouselRef.current) {
@@ -641,6 +671,12 @@ function Landing() {
       name: "No-code CRM & process optimisation at WeBlame",
       category: ["Data", "Product"],
       description: "Built a centralised CRM and operational processes to help a new association manage volunteers and testimonies efficiently with limited resources.",
+      logo: weblameLogo,
+      screenshots: [
+        { src: weblameAirtable, label: "Airtable – CRM structure" },
+        { src: weblameNotion, label: "Notion – Documentation hub" },
+        { src: weblameWhimsical, label: "Whimsical – Process mapping" }
+      ],
       tools: ["CRM implementation (+ATS)", "Notion", "Airtable", "Knowledge Management", "Project Management"],
       details: {
         context: "WeBlame is a newly created association facing rapid operational needs with very limited resources. Helene and Marline, working only two days per week, urgently needed a way to manage two distinct data sources—volunteers and victims' testimonies—while Epitech students were developing a long-term platform. The goal was to deliver a quick, reliable operational solution and ensure continuity between tools and teams.",
@@ -927,6 +963,18 @@ function Landing() {
   
   const [selectedTestimonial, setSelectedTestimonial] = useState<{ name: string; role: string; text: string; lang: string; expertises?: string[] } | null>(null)
 
+  // Handle body overflow when modals are open
+  useEffect(() => {
+    if (showBeyondProjects || showMyServices) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [showBeyondProjects, showMyServices])
+
   return (
     <div className="landing">
       {/* Navigation */}
@@ -1001,6 +1049,27 @@ function Landing() {
                     className="avatar"
                   />
                 </div>
+                <div className="hero-cta-icons">
+                  <a href="https://cal.com/marig-sarrazin-xktoid/30min?user=marig-sarrazin-xktoid" target="_blank" rel="noopener noreferrer" className="cta-icon-only" aria-label="Book a call">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                      <line x1="16" y1="2" x2="16" y2="6"/>
+                      <line x1="8" y1="2" x2="8" y2="6"/>
+                      <line x1="3" y1="10" x2="21" y2="10"/>
+                    </svg>
+                  </a>
+                  <a href="https://airtable.com/appJLiWmb5Ix5hoLV/pagLQjfRe0JhDbmXv/form" target="_blank" rel="noopener noreferrer" className="cta-icon-only" aria-label="Contact me">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                      <polyline points="22,6 12,13 2,6"/>
+                    </svg>
+                  </a>
+                  <a href="https://linkedin.com/in/marig-sarrazin" target="_blank" rel="noopener noreferrer" className="cta-icon-only" aria-label="LinkedIn Profile">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                    </svg>
+                  </a>
+                </div>
               </div>
               <div className="hero-text-section">
                 <h1 className="hero-title">
@@ -1014,27 +1083,144 @@ function Landing() {
                     I love <strong>data</strong>, I can talk for hours about <strong>talent development</strong>, and I'm fascinated by <strong>product design and delivery</strong>. I'm curious by nature and don't want to do just one thing—I thrive at the intersection of <strong>people, processes, and technology</strong>.
                   </p>
                 </div>
-                <div className="hero-cta-group">
-                  <a href="https://cal.com/marig-sarrazin-xktoid/30min?user=marig-sarrazin-xktoid" target="_blank" rel="noopener noreferrer" className="cta-primary">
-                    Book a call
+                <div className="hero-buttons-row">
+                  <button 
+                    className="cta-beyond-projects"
+                    onClick={() => setShowBeyondProjects(true)}
+                  >
+                    Beyond my projects
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                       <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
-                  </a>
-                  <a href="https://airtable.com/appJLiWmb5Ix5hoLV/pagLQjfRe0JhDbmXv/form" target="_blank" rel="noopener noreferrer" className="cta-secondary">
-                    Contact me
-                  </a>
-                  <a href="https://linkedin.com/in/marig-sarrazin" target="_blank" rel="noopener noreferrer" className="cta-linkedin" aria-label="LinkedIn Profile">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                  </button>
+                  <button 
+                    className="cta-beyond-projects"
+                    onClick={() => setShowMyServices(true)}
+                  >
+                    My services
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                      <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
-                  </a>
+                  </button>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </section>
+
+      {/* Beyond my projects Modal */}
+      {showBeyondProjects && (
+        <div className="expertise-modal-overlay" onClick={() => setShowBeyondProjects(false)}>
+          <div className="expertise-modal" onClick={(e) => e.stopPropagation()}>
+            <button className="expertise-modal-close" onClick={() => setShowBeyondProjects(false)}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+            <div className="expertise-modal-header expertise-modal-header--compact">
+              <h2 className="expertise-modal-title">Beyond my projects</h2>
+            </div>
+            <div className="expertise-modal-content expertise-modal-content--spacious">
+              <div className="expertise-modal-section">
+                <p className="expertise-modal-intro">
+                  I'm deeply engaged in the non-profit and social impact ecosystem. I currently collaborate with organizations such as <span className="text-highlight">WeBlame</span>, <span className="text-highlight">SOS Méditerranée</span>, <span className="text-highlight">Wake Up Café</span>, and <span className="text-highlight">Capital Filles</span>, supporting initiatives focused on inclusion, education, and social justice.
+                </p>
+                <p className="expertise-modal-intro">
+                  Outside of work, you'll most likely find me watching or talking about <span className="text-highlight">rugby</span> or the <span className="text-highlight">NBA</span>, or spending an evening at the cinema. I'm a huge <span className="text-highlight">film lover</span> — stories, emotions, and great directing always inspire the way I think about products and people.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* My services Modal */}
+      {showMyServices && (
+        <div className="expertise-modal-overlay" onClick={() => setShowMyServices(false)}>
+          <div className="expertise-modal" onClick={(e) => e.stopPropagation()}>
+            <button className="expertise-modal-close" onClick={() => setShowMyServices(false)}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+            <div className="expertise-modal-header">
+              <h2 className="expertise-modal-title">My services</h2>
+            </div>
+            <div className="expertise-modal-content expertise-modal-content--spacious">
+              {/* What I do section */}
+              <div className="expertise-modal-section">
+                <h3 className="expertise-modal-section-title">What I do — at a glance</h3>
+                <p className="expertise-modal-intro" style={{ marginBottom: '0.75rem' }}>
+                  I support organisations (especially mission-driven and non-profit) with:
+                </p>
+                <ul className="expertise-modal-list expertise-modal-list--bullets">
+                  <li>People strategy & organisational design</li>
+                  <li>Operations & process optimisation</li>
+                  <li>Product management & delivery support</li>
+                  <li>Sales operations & CRM strategy / implementation</li>
+                  <li>Transition roles (HR, Ops, Product)</li>
+                  <li>Change management & adoption</li>
+                </ul>
+              </div>
+
+              <div className="expertise-modal-divider"></div>
+
+              {/* How I work section */}
+              <div className="expertise-modal-section">
+                <h3 className="expertise-modal-section-title">How I work — engagements & rates</h3>
+                <p className="expertise-modal-intro">
+                  I work with flexible engagement models, depending on the mission and your needs:
+                </p>
+                <ul className="expertise-modal-list expertise-modal-list--bullets">
+                  <li><strong>Project-based fee</strong> for one-off missions<br />
+                    <span style={{ fontSize: '0.9em', color: 'var(--color-text-lighter)' }}>(e.g. auditing your tools, processes, or organisational setup)</span>
+                  </li>
+                  <li><strong>Daily rate</strong> for ongoing support and transformation missions</li>
+                </ul>
+                <p className="expertise-modal-intro" style={{ marginTop: '1rem' }}>
+                  My rate depends on:
+                </p>
+                <ul className="expertise-modal-list expertise-modal-list--bullets">
+                  <li>the type of organisation (start-up, scale-up, non-profit)</li>
+                  <li>the role and level of responsibility of the mission</li>
+                  <li>the number of days per month and the duration of the collaboration</li>
+                </ul>
+                <p className="expertise-modal-intro" style={{ marginTop: '1rem', fontStyle: 'italic' }}>
+                  I aim for long-term, realistic setups that fit your context — not one-size-fits-all solutions.
+                </p>
+              </div>
+
+              <div className="expertise-modal-divider"></div>
+
+              {/* Mindset & approach section */}
+              <div className="expertise-modal-section">
+                <h3 className="expertise-modal-section-title">Mindset & approach</h3>
+                <p className="expertise-modal-intro">
+                  My approach is shaped by a strong HR background that naturally evolved into operations and product. I don't see these roles as separate — but as deeply connected.
+                </p>
+                <ul className="expertise-modal-list expertise-modal-list--bullets">
+                  <li>I see operations as an extension of HR, and HR as a growth lever, not just a support function</li>
+                  <li>My focus is on creating the right conditions for people to succeed:<br />
+                    <span style={{ fontSize: '0.9em', color: 'var(--color-text-lighter)' }}>tools, structures, roles, and clarity</span>
+                  </li>
+                  <li>Operations act as a Swiss-army knife: cross-functional, adaptable, and able to intervene at any stage or in any team</li>
+                  <li>I always start with observation and understanding:<br />
+                    <span style={{ fontSize: '0.9em', color: 'var(--color-text-lighter)' }}>understanding roles, workflows, pain points, and real needs before thinking about solutions</span>
+                  </li>
+                  <li>I rely on strong market knowledge to choose solutions that fit your constraints — time, budget, and context</li>
+                  <li>I put a strong emphasis on change enablement:<br />
+                    <span style={{ fontSize: '0.9em', color: 'var(--color-text-lighter)' }}>alignment, adoption, and people actually using what's being built</span>
+                  </li>
+                </ul>
+                <p className="expertise-modal-intro" style={{ marginTop: '1rem' }}>
+                  Whether it's a CRM implementation, a team reorganisation, or a process redesign, my goal is to help you build sustainable growth on solid foundations — with people fully on board.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Skills Section */}
       <section id="expertise" className="section skills-section">
